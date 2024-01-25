@@ -1,0 +1,110 @@
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+
+
+@Controller
+public class EmployeeController {
+
+	@Autowired
+	SessionFactory sf;
+
+	@RequestMapping("/")
+	public String name() {
+		return "sonali";
+	}
+
+	@RequestMapping("/sonali")
+	public String Login(Login login, Model model) {
+		Session session = sf.openSession();
+		Login dbLogin = session.get(Login.class, login.getPassword());
+		String page = "swaraj";
+		String msg = null;
+		if (dbLogin != null) {
+			if (login.getUsername().equals(dbLogin.getUsername())) {
+				page = "home";
+			} else {
+				msg = "Invalid Username";
+			}
+		} else {
+			msg = "Invalid Password";
+		}
+		model.addAttribute("msg", msg);
+		return page;
+
+	}
+
+	@RequestMapping("/sonaliwanveCreateAccount")
+	public String CreateAccount() {
+		return "sonaliwanve";
+	}
+
+	@RequestMapping("/sonaliwanve")
+	public Login DentalLogin(Login login) {
+		Session session = sf.openSession();
+		Transaction tx = session.beginTransaction();
+		session.save(login);
+		tx.commit();
+		return login;
+	}
+
+	@RequestMapping("/homePage")
+	public String homePage() {
+		return "home";
+	}
+
+	@RequestMapping("/aboutPage")
+	public String aboutPage() {
+		return "about";
+	}
+
+	@RequestMapping("/coursesPage")
+	public String coursesPage() {
+		return "course";
+	}
+
+	@RequestMapping("/coursesDetailsPage")
+	public String coursesDetailsPage() {
+		return "detail";
+	}
+
+	@RequestMapping("/ourFeaturesPage")
+	public String ourFeaturesPage() {
+		return "feature";
+	}
+
+	@RequestMapping("/instructorsPage")
+	public String instructorsPage() {
+		return "team";
+	}
+
+	@RequestMapping("/testmonialPage")
+	public String testmonialPage() {
+		return "testimonial";
+	}
+
+	@RequestMapping("/contactPage")
+	public String contactPage() {
+		return "contact";
+	}
+
+	@RequestMapping("/contact")
+	public Contact contactPageDB(Contact contact) {
+		Session s = sf.openSession();
+		Transaction t = s.beginTransaction();
+		s.save(contact);
+		t.commit();
+		return contact;
+	}
+
+	@RequestMapping("/backToLogin")
+	public String backToLogin() {
+		return "sonali";
+	}
+
+}
